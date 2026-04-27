@@ -46,7 +46,7 @@ public class DoctorService {
     }
 
     @Transactional
-    public void deletePatient(Long id) {
+    public void deleteDoctor(Long id) {
         if (!doctorRepository.existsById(id)) {
             throw new RuntimeException("Patient not found with the ID : " + id);
         }
