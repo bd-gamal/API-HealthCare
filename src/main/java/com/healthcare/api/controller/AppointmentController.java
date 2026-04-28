@@ -19,7 +19,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping
-    @Operation(summary = "Create new appointment for appointment")
+    @Operation(summary = "Create new appointment for patient")
     public ResponseEntity<AppointmentResponseDTO> createAppointment(@Valid @RequestBody AppointmentRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentService.createAppointment(dto));
     }

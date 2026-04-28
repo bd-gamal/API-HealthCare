@@ -15,5 +15,6 @@ public interface AppointmentMapper {
 
     @Mapping(target = "doctorName", source = "doctor.name")
     @Mapping(target = "doctorSpecialty", source = "doctor.specialty")
+    @Mapping(target = "patientCompleteName", expression = "java(entity.getPatient().getFirstName() + \" \" + entity.getPatient().getLastName())")
     AppointmentResponseDTO toResponseDTO(Appointment entity);
 }
