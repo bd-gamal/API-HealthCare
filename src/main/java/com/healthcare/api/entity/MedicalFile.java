@@ -19,7 +19,9 @@ public class MedicalFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
     private String diagnosis;
+    @Column(columnDefinition = "TEXT")
     private String observation;
 
     @CreationTimestamp

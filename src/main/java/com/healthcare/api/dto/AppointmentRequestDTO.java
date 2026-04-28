@@ -5,13 +5,13 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class AppointmentRequestDTO {
     @NotNull(message = "The appointment date is mandatory")
     @Future(message = "The date must be in the future")
-    private LocalDate appointmentDate;
+    private LocalDateTime appointmentDate;
 
     @NotNull(message = "The patient ID is mandatory")
     private Long patientId;
