@@ -74,11 +74,59 @@ class AppointmentServiceTest {
 
     @Test
     void getAllAppointments() {
+        appointmentRepository.deleteAll();
 
+        Appointment appointment1 = new Appointment();
+        appointment1.setPatient(patientTest);
+        appointment1.setDoctor(doctorTest);
+        appointment1.setAppointmentDate(LocalDateTime.now().plusDays(1));
+        appointment1.setStatus(AppointmentStatus.PLANNED);
+        appointmentRepository.save(appointment1);
+
+        Appointment appointment2 = new Appointment();
+        appointment1.setPatient(patientTest);
+        appointment1.setDoctor(doctorTest);
+        appointment1.setAppointmentDate(LocalDateTime.now().plusDays(2));
+        appointment1.setStatus(AppointmentStatus.COMPLETED);
+        appointmentRepository.save(appointment2);
+
+        List<AppointmentResponseDTO> result = appointmentService.getAllAppointments();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
     }
 
     @Test
     void getAppointmentByPatient() {
+        appointmentRepository.deleteAll();
+
+        Appointment appointmentPatient1 = new Appointment();
+        appointmentPatient1.setPatient(patientTest);
+        appointmentPatient1.setDoctor(doctorTest);
+        appointmentPatient1.setAppointmentDate(LocalDateTime.now().plusDays(2));
+        appointmentPatient1.setStatus(AppointmentStatus.PLANNED);
+        appointmentRepository.save(appointmentPatient1);
+
+        Patient patient2 = new Patient();
+        patient2.setLastName("Arbaoui");
+        patient2.setFirstName("Hamid");
+        patient2.setEmail("hamid@gmail.com");
+        patient2.setPhone("54678965");
+        Patient savePatient2 = patientRepository.save(patient2);
+
+        Appointment appointmentPatient2 = new Appointment();
+        appointmentPatient2.setPatient(savePatient2);
+        appointmentPatient2.setDoctor(doctorTest);
+        appointmentPatient2.setAppointmentDate(LocalDateTime.now().plusDays(3));
+        appointmentPatient2.setStatus(AppointmentStatus.PLANNED);
+        appointmentRepository.save(appointmentPatient2);
+
+        List<AppointmentResponseDTO> result = appointmentService.getAppointmentByPatient(patient2.getId());
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Hamid Arbaoui", result.get(0).getPatientCompleteName());
+
     }
 
     @Test
