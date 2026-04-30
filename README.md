@@ -1,3 +1,11 @@
+![HealthCare classes.jpg](HealthCare%20classes.jpg)
+---
+![HealthCare UseCase.jpg](HealthCare%20UseCase.jpg)
+---
+![HealthCare sequence.jpg](HealthCare%20sequence.jpg)
+---
+![img.png](img.png)
+---
 # 🏥 API HealthCare+ - Gestion du Système de Santé
 
 Une API REST complète et robuste pour la gestion d'un système de santé, permettant de gérer les patients, les médecins, les rendez-vous et les dossiers médicaux.
