@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class AppointmentServiceTest {
 
     @Autowired
@@ -69,7 +71,7 @@ class AppointmentServiceTest {
         assertEquals("Mbarek Charkaoui", responseDTO.getPatientCompleteName());
 
         List<Appointment> allAppointments = appointmentRepository.findAll();
-        assertEquals(2, allAppointments.size());
+        assertEquals(1, allAppointments.size());
     }
 
     @Test
@@ -84,10 +86,10 @@ class AppointmentServiceTest {
         appointmentRepository.save(appointment1);
 
         Appointment appointment2 = new Appointment();
-        appointment1.setPatient(patientTest);
-        appointment1.setDoctor(doctorTest);
-        appointment1.setAppointmentDate(LocalDateTime.now().plusDays(2));
-        appointment1.setStatus(AppointmentStatus.COMPLETED);
+        appointment2.setPatient(patientTest);
+        appointment2.setDoctor(doctorTest);
+        appointment2.setAppointmentDate(LocalDateTime.now().plusDays(2));
+        appointment2.setStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment2);
 
         List<AppointmentResponseDTO> result = appointmentService.getAllAppointments();
