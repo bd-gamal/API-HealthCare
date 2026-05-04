@@ -13,5 +13,6 @@ public interface MedicalFileMapper {
     MedicalFile toEntity(MedicalFileRequestDTO requestDTO);
 
     @Mapping(target = "patientId", source = "patient.id")
+    @Mapping(target = "patientCompleteName", expression = "java(medicalFile.getPatient().getFirstName() + ' ' + medicalFile.getPatient().getLastName())")
     MedicalFileResponseDTO toResponseDTO(MedicalFile entity);
 }

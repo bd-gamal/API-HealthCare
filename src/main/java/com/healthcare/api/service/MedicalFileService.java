@@ -42,10 +42,10 @@ public class MedicalFileService {
     public MedicalFileResponseDTO addObservationAndDiagnosis(Long fileId, String observation, String diagnosis) {
         MedicalFile file = medicalFileRepository.findById(fileId).orElseThrow(() -> new RuntimeException("File not found"));
         if (observation != null) {
-            file.setObservation(file.getObservation());
+            file.setObservation(observation);
         }
         if (diagnosis != null) {
-            file.setDiagnosis(file.getDiagnosis());
+            file.setDiagnosis(diagnosis);
         }
         return medicalFileMapper.toResponseDTO(medicalFileRepository.save(file));
     }

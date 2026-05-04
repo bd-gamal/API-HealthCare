@@ -37,7 +37,7 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new RuntimeException("This doctor doesn't exist"));
 
         doctor.setName(dto.getName());
-        doctor.setSpecialty(doctor.getSpecialty());
+        doctor.setSpecialty(dto.getSpecialty());
         doctor.setEmail(dto.getEmail());
         doctor.setPhone(dto.getPhone());
 
