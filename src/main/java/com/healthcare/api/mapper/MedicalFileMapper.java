@@ -9,10 +9,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MedicalFileMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "patient", ignore = true)
     MedicalFile toEntity(MedicalFileRequestDTO requestDTO);
 
     @Mapping(target = "patientId", source = "patient.id")
-    @Mapping(target = "patientCompleteName", expression = "java(medicalFile.getPatient().getFirstName() + ' ' + medicalFile.getPatient().getLastName())")
+    @Mapping(target = "patientCompleteName", expression = "java(entity.getPatient().getFirstName() + ' ' + entity.getPatient().getLastName())")
     MedicalFileResponseDTO toResponseDTO(MedicalFile entity);
 }
