@@ -48,8 +48,16 @@ public class DoctorService {
     @Transactional
     public void deleteDoctor(Long id) {
         if (!doctorRepository.existsById(id)) {
-            throw new RuntimeException("Patient not found with the ID : " + id);
+            throw new RuntimeException("Doctor not found with the ID : " + id);
         }
         doctorRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List<DoctorResponseDTO> findBySpecialty(String specialty) {
+        return doctorRepository.findBySpecialty(specialty)
+                .stream()
+                .map(doctor -> doctorMapper.toResponseDTO(doctor))
+                .toList();
     }
 }
