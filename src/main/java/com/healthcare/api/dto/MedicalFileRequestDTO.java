@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class MedicalFileRequestDTO {
     @NotNull(message = "The patient ID is mandatory to create a file")
@@ -14,4 +16,6 @@ public class MedicalFileRequestDTO {
 
     @NotBlank(message = "The observation is mandatory")
     private String observation;
+
+    private LocalDate creationDate;
 }

@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 public interface MedicalFileMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "patient", ignore = true)
     MedicalFile toEntity(MedicalFileRequestDTO requestDTO);
 
