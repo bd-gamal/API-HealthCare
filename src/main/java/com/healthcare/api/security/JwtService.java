@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "ReservoirDogsPulpFictionDjangoUnchainedOnceUponATimeInHollywood";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION_TIME = 1000 * 60 * 30;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
