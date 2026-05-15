@@ -170,6 +170,17 @@ http://localhost:8080/api
 | **PUT** | `/medical-file/{id}` | Mettre à jour un dossier |
 | **DELETE** | `/medical-file/{id}` | Supprimer un dossier |
 
+### 🔐 Authentification
+
+| Methode | Endpoint | Description |
+|---------|----------|------------|
+| **POST** | `/auth/register` | Creer un utilisateur et retourner un JWT |
+| **POST** | `/auth/login` | Se connecter et retourner un JWT |
+
+**Header a fournir pour les endpoints proteges :**
+```
+Authorization: Bearer <token>
+```
 
 ## 🧪 Tests
 
@@ -221,4 +232,3 @@ Vous pouvez tester tous les endpoints directement depuis l'interface Swagger !
 ## 🎉 Merci !
 
 Merci d'avoir utilisé **API HealthCare+** ! N'hésitez pas à nous faire des retours et des suggestions pour améliorer le projet.
-
