@@ -9,6 +9,8 @@ import com.healthcare.api.repository.MedicalFileRepository;
 import com.healthcare.api.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,8 +35,15 @@ public class MedicalFileService {
     }
 
     @Transactional
+    public Page<MedicalFileResponseDTO> getAllMedicalFiles(Pageable pageable) {
+        return medicalFileRepository.findAll(pageable)
+                .map(medicalFileMapper::toResponseDTO);
+    }
+
+    @Transactional
     public MedicalFileResponseDTO getFileByPatientId(Long patientId) {
-        MedicalFile file = medicalFileRepository.findByPatientId(patientId).orElseThrow(() -> new RuntimeException("No file were found for this patient ID : " + patientId));
+        MedicalFile file = medicalFileRepository.findByPatientId(patientId)
+                .orElseThrow(() -> new RuntimeException("No file were found for this patient ID : " + patientId));
         return medicalFileMapper.toResponseDTO(file);
     }
 

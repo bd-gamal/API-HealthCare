@@ -7,6 +7,10 @@ import com.healthcare.api.mapper.PatientMapper;
 import com.healthcare.api.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +25,7 @@ public class PatientService {
     @Transactional
     public PatientResponseDTO createPatient(PatientRequestDTO dto) {
         if (patientRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("A patient with this email exist");
+            throw new IllegalArgumentException("A patient with this email already exists !");
         }
 
         Patient patient = patientMapper.toEntity(dto);
@@ -30,8 +34,13 @@ public class PatientService {
     }
 
     @Transactional
-    public List<PatientResponseDTO> getAllPatients() {
-        return patientRepository.findAll().stream().map(patientMapper::toResponseDTO).collect(Collectors.toList());
+    public Page<PatientResponseDTO> getAllPatients(Pageable pageable) {
+        return patientRepository.findAll(pageable).map(patientMapper::toResponseDTO);
+    }
+
+    @Transactional
+    public Page<PatientResponseDTO> searchPatientByName(String name, Pageable pageable) {
+        return patientRepository.findByLastNameContainingIgnoreCase(name, pageable).map(patientMapper::toResponseDTO);
     }
 
     @Transactional

@@ -10,6 +10,10 @@ import com.healthcare.api.mapper.DoctorMapper;
 import com.healthcare.api.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +32,8 @@ public class DoctorService {
     }
 
     @Transactional
-    public List<DoctorResponseDTO> getAllDoctors() {
-        return doctorRepository.findAll().stream().map(doctorMapper::toResponseDTO).collect(Collectors.toList());
+    public Page<DoctorResponseDTO> getAllDoctors(Pageable pageable) {
+        return doctorRepository.findAll(pageable).map(doctorMapper::toResponseDTO);
     }
 
     @Transactional
@@ -54,10 +58,8 @@ public class DoctorService {
     }
 
     @Transactional
-    public List<DoctorResponseDTO> findBySpecialty(String specialty) {
-        return doctorRepository.findBySpecialty(specialty)
-                .stream()
-                .map(doctor -> doctorMapper.toResponseDTO(doctor))
-                .toList();
+    public Page<DoctorResponseDTO> findBySpecialty(String specialty, Pageable pageable) {
+        return doctorRepository.findBySpecialtyContainingIgnoreCase(specialty, pageable)
+                .map(doctorMapper::toResponseDTO);
     }
 }
