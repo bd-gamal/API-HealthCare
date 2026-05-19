@@ -1,5 +1,6 @@
 package com.healthcare.api.dto;
 
+import com.healthcare.api.entity.Roles;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,4 +19,6 @@ public class RegisterRequest {
     @NotBlank(message = "The password is mandatory")
     @Size(min = 6, message = "The password must contain at least 6 characters")
     private String password;
+
+    private Roles roles;
 }

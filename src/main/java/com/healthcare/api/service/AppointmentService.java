@@ -12,6 +12,10 @@ import com.healthcare.api.repository.DoctorRepository;
 import com.healthcare.api.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,18 +43,23 @@ public class AppointmentService {
     }
 
     @Transactional
-    public List<AppointmentResponseDTO> getAllAppointments() {
-        return appointmentRepository.findAll().stream().map(appointmentMapper::toResponseDTO).collect(Collectors.toList());
+    public Page<AppointmentResponseDTO> getAllAppointments(Pageable pageable) {
+        return appointmentRepository.findAll(pageable).map(appointmentMapper::toResponseDTO);
     }
 
     @Transactional
-    public List<AppointmentResponseDTO> getAppointmentByPatient(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId).stream().map(appointmentMapper::toResponseDTO).collect(Collectors.toList());
+    public Page<AppointmentResponseDTO> getAppointmentByPatient(Long patientId, Pageable pageable) {
+        return appointmentRepository.findByPatientId(patientId, pageable).map(appointmentMapper::toResponseDTO);
     }
 
     @Transactional
-    public List<AppointmentResponseDTO> getAppointmentByDoctor(Long doctorId) {
-        return appointmentRepository.findByDoctorId(doctorId).stream().map(appointmentMapper::toResponseDTO).collect(Collectors.toList());
+    public Page<AppointmentResponseDTO> getAppointmentByDoctor(Long doctorId, Pageable pageable) {
+        return appointmentRepository.findByDoctorId(doctorId, pageable).map(appointmentMapper::toResponseDTO);
+    }
+
+    @Transactional
+    public Page<AppointmentResponseDTO> searchAppointmentsByStatus(AppointmentStatus status, Pageable pageable) {
+        return appointmentRepository.findByStatus(status, pageable).map(appointmentMapper::toResponseDTO);
     }
 
     @Transactional

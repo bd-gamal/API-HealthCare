@@ -3,6 +3,7 @@ package com.healthcare.api.service;
 import com.healthcare.api.dto.AuthResponse;
 import com.healthcare.api.dto.LoginRequest;
 import com.healthcare.api.dto.RegisterRequest;
+import com.healthcare.api.entity.Roles;
 import com.healthcare.api.entity.User;
 import com.healthcare.api.repository.UserRepository;
 import com.healthcare.api.security.CustomUserDetailsService;
@@ -13,6 +14,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.management.relation.Relation;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -32,30 +37,39 @@ public class AuthService {
             throw new IllegalArgumentException("Email already exists");
         }
 
+        Roles assignedRole = request.getRoles() != null ? request.getRoles() : Roles.PATIENT;
+
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(assignedRole)
                 .build();
 
         userRepository.save(user);
-        return buildAuthResponse(user.getUsername());
+        return buildAuthResponse(user);
     }
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        return buildAuthResponse(request.getUsername());
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return buildAuthResponse(user);
     }
 
-    private AuthResponse buildAuthResponse(String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        String token = jwtService.generateToken(userDetails);
+    private AuthResponse buildAuthResponse(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", "ROLE_" + user.getRole().name());
+
+        String token = jwtService.generateToken(extraClaims, user);
         return AuthResponse.builder()
                 .token(token)
                 .tokenType("Bearer")
                 .expiresInMs(jwtService.getExpirationMs())
-                .username(username)
+                .username(user.getUsername())
+                .role(user.getRole().name())
                 .build();
     }
 }
