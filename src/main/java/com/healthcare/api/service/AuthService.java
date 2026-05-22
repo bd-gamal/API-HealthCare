@@ -6,16 +6,13 @@ import com.healthcare.api.dto.RegisterRequest;
 import com.healthcare.api.entity.Roles;
 import com.healthcare.api.entity.User;
 import com.healthcare.api.repository.UserRepository;
-import com.healthcare.api.security.CustomUserDetailsService;
 import com.healthcare.api.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Relation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +24,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final CustomUserDetailsService userDetailsService;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -66,9 +62,6 @@ public class AuthService {
         String token = jwtService.generateToken(extraClaims, user);
         return AuthResponse.builder()
                 .token(token)
-                .tokenType("Bearer")
-                .expiresInMs(jwtService.getExpirationMs())
-                .username(user.getUsername())
                 .role(user.getRole().name())
                 .build();
     }
