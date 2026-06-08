@@ -9,6 +9,8 @@ import com.healthcare.api.repository.MedicalFileRepository;
 import com.healthcare.api.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class MedicalFileService {
     private final MedicalFileMapper medicalFileMapper;
 
     @Transactional
+    @CacheEvict(value = "medicalFiles", allEntries = true)
     public MedicalFileResponseDTO createFile(MedicalFileRequestDTO dto) {
         Patient patient = patientRepository.findById(dto.getPatientId()).orElseThrow(() -> new RuntimeException("Patient not found"));
         if (medicalFileRepository.existsByPatientId(patient.getId())) {
@@ -41,6 +44,7 @@ public class MedicalFileService {
     }
 
     @Transactional
+    @Cacheable(value = "medicalFiles", key = "#patientId")
     public MedicalFileResponseDTO getFileByPatientId(Long patientId) {
         MedicalFile file = medicalFileRepository.findByPatientId(patientId)
                 .orElseThrow(() -> new RuntimeException("No file were found for this patient ID : " + patientId));
@@ -48,6 +52,7 @@ public class MedicalFileService {
     }
 
     @Transactional
+    @CacheEvict(value = "medicalFiles", allEntries = true)
     public MedicalFileResponseDTO addObservationAndDiagnosis(Long fileId, String observation, String diagnosis) {
         MedicalFile file = medicalFileRepository.findById(fileId).orElseThrow(() -> new RuntimeException("File not found"));
         if (observation != null) {
