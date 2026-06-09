@@ -12,6 +12,8 @@ import com.healthcare.api.repository.DoctorRepository;
 import com.healthcare.api.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ public class AppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     @Transactional
+    @CacheEvict(value = "appointments", allEntries = true)
     public AppointmentResponseDTO createAppointment(AppointmentRequestDTO dto) {
         Patient patient = patientRepository.findById(dto.getPatientId()).orElseThrow(() -> new RuntimeException("Patient not found"));
         Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
@@ -43,6 +46,7 @@ public class AppointmentService {
     }
 
     @Transactional
+    @Cacheable(value = "appointments")
     public Page<AppointmentResponseDTO> getAllAppointments(Pageable pageable) {
         return appointmentRepository.findAll(pageable).map(appointmentMapper::toResponseDTO);
     }
@@ -63,6 +67,7 @@ public class AppointmentService {
     }
 
     @Transactional
+    @CacheEvict(value = "appointments", allEntries = true)
     public AppointmentResponseDTO updateAppointment(Long id, AppointmentStatus status) {
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
         appointment.setStatus(status);
@@ -70,6 +75,7 @@ public class AppointmentService {
     }
 
     @Transactional
+    @CacheEvict(value = "appointments", allEntries = true)
     public AppointmentResponseDTO cancelAppointment(Long id) {
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found with ID : " + id));
         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {

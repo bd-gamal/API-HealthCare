@@ -9,7 +9,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: healthcare_db
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: "SpringBoot2026"
     networks:
       - healthcare-net
     volumes:
@@ -20,6 +20,32 @@ services:
       timeout: 20s
       retries: 10
 
+  redis:
+    image: redis:7.2-alpine
+    container_name: healthcare_redis
+    restart: no
+    ports:
+      - "6379:6379"
+    networks:
+      - healthcare-net
+    healthcheck:
+     test: [ "CMD", "redis-cli", "ping" ]
+     interval: 10s
+     timeout: 5s
+     retries: 5
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: healthcare_redisinsight
+    restart: no
+    ports:
+      - "5540:5540"
+    networks:
+      - healthcare-net
+    depends_on:
+      redis:
+        condition: service_healthy
+
   app:
     build: .
     container_name: healthcare_app
@@ -29,10 +55,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/healthcare_db?createDatabaseIfNotExist=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: "SpringBoot2026"
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     networks:
       - healthcare-net
 

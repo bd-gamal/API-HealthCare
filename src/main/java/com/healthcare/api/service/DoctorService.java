@@ -10,6 +10,8 @@ import com.healthcare.api.mapper.DoctorMapper;
 import com.healthcare.api.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,17 +28,20 @@ public class DoctorService {
     private final DoctorMapper doctorMapper;
 
     @Transactional
+    @CacheEvict(value = "doctors", allEntries = true)
     public DoctorResponseDTO createDoctor(DoctorRequestDTO dto) {
         Doctor doctor = doctorMapper.toEntity(dto);
         return doctorMapper.toResponseDTO(doctorRepository.save(doctor));
     }
 
     @Transactional
+    @Cacheable(value = "doctors")
     public Page<DoctorResponseDTO> getAllDoctors(Pageable pageable) {
         return doctorRepository.findAll(pageable).map(doctorMapper::toResponseDTO);
     }
 
     @Transactional
+    @CacheEvict(value = "doctors", allEntries = true)
     public DoctorResponseDTO updateDoctor(Long id, DoctorRequestDTO dto) {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new RuntimeException("This doctor doesn't exist"));
 
@@ -50,6 +55,7 @@ public class DoctorService {
     }
 
     @Transactional
+    @CacheEvict(value = "doctors", allEntries = true)
     public void deleteDoctor(Long id) {
         if (!doctorRepository.existsById(id)) {
             throw new RuntimeException("Doctor not found with the ID : " + id);
