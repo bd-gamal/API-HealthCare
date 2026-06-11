@@ -1,10 +1,8 @@
 package com.healthcare.api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +11,8 @@ import java.util.List;
 @Table(name = "patient")
 @PrimaryKeyJoinColumn(name = "id")
 @Data @NoArgsConstructor @AllArgsConstructor
-@Builder
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
 public class Patient extends User {
 
     private String lastName;
