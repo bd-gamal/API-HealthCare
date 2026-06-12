@@ -1,5 +1,6 @@
 package com.healthcare.api.service;
 
+import com.healthcare.api.dto.PatientDetailResponseDTO;
 import com.healthcare.api.dto.PatientRequestDTO;
 import com.healthcare.api.dto.PatientResponseDTO;
 import com.healthcare.api.entity.Patient;
@@ -60,6 +61,14 @@ public class PatientService {
     public PatientResponseDTO getPatientById(Long id) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> new RuntimeException("This patient doesn't exist"));
         return patientMapper.toResponseDTO(patient);
+    }
+
+    @Transactional
+    public PatientDetailResponseDTO getPatientWithAppointments(Long id) {
+        Patient patient = patientRepository.findByIdWithAppointments(id)
+                .orElseThrow(() -> new RuntimeException("This patient doesn't exist"));
+
+        return patientMapper.toDetailResponseDTO(patient);
     }
 
     @Transactional

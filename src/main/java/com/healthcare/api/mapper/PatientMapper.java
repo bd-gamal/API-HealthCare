@@ -1,5 +1,6 @@
 package com.healthcare.api.mapper;
 
+import com.healthcare.api.dto.PatientDetailResponseDTO;
 import com.healthcare.api.dto.PatientRequestDTO;
 import com.healthcare.api.dto.PatientResponseDTO;
 import com.healthcare.api.entity.Patient;
@@ -11,4 +12,6 @@ public interface PatientMapper {
     Patient toEntity(PatientRequestDTO requestDTO);
 
     PatientResponseDTO toResponseDTO(Patient entity);
+
+    PatientDetailResponseDTO toDetailResponseDTO(Patient entity);
 }

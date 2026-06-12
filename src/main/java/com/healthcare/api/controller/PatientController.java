@@ -1,5 +1,6 @@
 package com.healthcare.api.controller;
 
+import com.healthcare.api.dto.PatientDetailResponseDTO;
 import com.healthcare.api.dto.PatientRequestDTO;
 import com.healthcare.api.dto.PatientResponseDTO;
 import com.healthcare.api.service.PatientService;
@@ -51,6 +52,13 @@ public class PatientController {
     @Operation(summary = "Get patient by ID")
     public ResponseEntity<PatientResponseDTO> getPatientById(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.getPatientById(id));
+    }
+
+    @GetMapping("/{id}/full")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MEDECIN', 'PATIENT')")
+    @Operation(summary = "Get patient profile with all their appointments (Optimized query)")
+    public ResponseEntity<PatientDetailResponseDTO> getPatientFullDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(patientService.getPatientWithAppointments(id));
     }
 
     @PutMapping("/{id}")
